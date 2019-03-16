@@ -56,7 +56,9 @@ void HttpClient::perform_cleanup()
 
 void HttpClient::process_request(http_request_t request)
 {
-    curl_easy_setopt(this->curl_instance, CURLOPT_URL, request.url.c_str());
+    CURLcode return_code = curl_easy_setopt(this->curl_instance, CURLOPT_URL, request.url.c_str());
+
+    check_status((int) return_code);
 
     process_headers(request);
 }
@@ -72,7 +74,9 @@ void HttpClient::process_headers(http_request_t request)
             this->current_headers = curl_slist_append(this->current_headers, i->c_str());
         }
 
-        curl_easy_setopt(this->curl_instance, CURLOPT_HTTPHEADER, this->current_headers);
+        CURLcode return_code = curl_easy_setopt(this->curl_instance, CURLOPT_HTTPHEADER, this->current_headers);
+
+        check_status((int) return_code);
     }
 }
 
