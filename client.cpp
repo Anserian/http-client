@@ -44,6 +44,13 @@ void HttpClient::perform_cleanup()
     curl_easy_cleanup(this->curl_instance);
 }
 
+void HttpClient::process_request(http_request_t request)
+{
+    curl_easy_setopt(this->curl_instance, CURLOPT_URL, request.url.c_str());
+
+    process_headers(request);
+}
+
 void HttpClient::process_headers(http_request_t request)
 {
     if (request.headers.size() > 0)
@@ -63,9 +70,7 @@ int HttpClient::make_request(http_request_t request)
 {
     try
     {
-        curl_easy_setopt(this->curl_instance, CURLOPT_URL, request.url.c_str());
-
-        process_headers(request);
+        process_request(request);
 
         perform_operation();
 
