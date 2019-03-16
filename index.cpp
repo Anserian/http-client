@@ -11,7 +11,7 @@ int main()
 
     http_request_t request = {
         "GET",
-        "http://google.com"
+        "https://www.google.com"
     };
 
     append_header(&request, "Content-Type: text/html");

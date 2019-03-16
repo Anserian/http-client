@@ -12,6 +12,12 @@ using namespace std;
 
 typedef struct curl_slist header_list_t;
 
+struct HttpClientConfig
+{
+    string client_cert_path;
+    string client_ca_cert_path;
+};
+
 struct HttpRequest
 {
     string method;
@@ -25,6 +31,8 @@ struct HttpResponse
     string data;
     vector<string> headers;
 };
+
+typedef struct HttpClientConfig http_client_config_t;
 
 typedef struct HttpRequest http_request_t;
 
@@ -43,8 +51,11 @@ class HttpClient
 
     public:
         HttpClient();
+        HttpClient(http_client_config_t);
         void perform_setup();
         void perform_operation();
+        void process_ssl_config(http_client_config_t);
+        void process_config(http_client_config_t);
         void process_request(http_request_t);
         void process_headers(http_request_t);
         void perform_cleanup();

@@ -27,6 +27,20 @@ HttpClient::HttpClient()
     perform_setup();
 }
 
+HttpClient::HttpClient(http_client_config_t config)
+{
+    try
+    {
+        perform_setup();
+
+        process_config(config);
+    }
+    catch (int error_code)
+    {
+        show_client_error(error_code);
+    }
+}
+
 void HttpClient::perform_setup()
 {
     if (this->curl_instance == NULL)
@@ -52,6 +66,25 @@ void HttpClient::perform_cleanup()
     curl_easy_cleanup(this->curl_instance);
 
     this->curl_instance = NULL;
+}
+
+void HttpClient::process_ssl_config(http_client_config_t config)
+{
+    if (config.client_cert_path.length())
+    {
+        CURLcode return_code = curl_easy_setopt(this->curl_instance, CURLOPT_SSLCERTTYPE, "PEM");
+
+        check_status((int) return_code);
+
+        return_code = curl_easy_setopt(this->curl_instance, CURLOPT_SSLCERT, config.client_cert_path.c_str());
+
+        check_status((int) return_code);
+    }
+}
+
+void HttpClient::process_config(http_client_config_t config)
+{
+    process_ssl_config(config);
 }
 
 void HttpClient::process_request(http_request_t request)
