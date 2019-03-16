@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 
 #include "client.h"
 
@@ -10,10 +11,14 @@ int main()
 
     http_request_t request = {
         "GET",
-        "http://www.google.com"
+        "http://google.com"
     };
 
     append_header(&request, "Content-Type: text/html");
+
+    client.make_request(request);
+
+    usleep(1000000);
 
     client.make_request(request);
 }

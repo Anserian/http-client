@@ -24,7 +24,15 @@ void append_header(http_request_t* request, string header)
 
 HttpClient::HttpClient()
 {
-    this->curl_instance = curl_easy_init();
+    perform_setup();
+}
+
+void HttpClient::perform_setup()
+{
+    if (this->curl_instance == NULL)
+    {
+        this->curl_instance = curl_easy_init();
+    }
 }
 
 void HttpClient::perform_operation()
@@ -42,6 +50,8 @@ void HttpClient::perform_cleanup()
     }
 
     curl_easy_cleanup(this->curl_instance);
+
+    this->curl_instance = NULL;
 }
 
 void HttpClient::process_request(http_request_t request)
@@ -70,6 +80,8 @@ int HttpClient::make_request(http_request_t request)
 {
     try
     {
+        perform_setup();
+
         process_request(request);
 
         perform_operation();
