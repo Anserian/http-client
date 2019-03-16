@@ -34,12 +34,14 @@ void HttpClient::perform_operation()
     check_status((int) return_code);
 }
 
-void HttpClient::perform_other_cleanup()
+void HttpClient::perform_cleanup()
 {
     if (this->current_headers != NULL)
     {
         curl_slist_free_all(this->current_headers);
     }
+
+    curl_easy_cleanup(this->curl_instance);
 }
 
 void HttpClient::process_headers(http_request_t request)
@@ -67,9 +69,7 @@ int HttpClient::make_request(http_request_t request)
 
         perform_operation();
 
-        perform_other_cleanup();
-
-        curl_easy_cleanup(this->curl_instance);
+        perform_cleanup();
     
         return 0;
     }

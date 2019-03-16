@@ -45,7 +45,7 @@ class HttpClient
         HttpClient();
         void perform_operation();
         void process_headers(http_request_t);
-        void perform_other_cleanup();
+        void perform_cleanup();
         int make_request(http_request_t);
 };
 
